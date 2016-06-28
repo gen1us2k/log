@@ -7,12 +7,19 @@ import (
 
 type (
 	Logger interface {
-		Panic(format string, v ...interface{})
-		Fatal(format string, v ...interface{})
-		Error(format string, v ...interface{})
-		Warning(format string, v ...interface{})
-		Info(format string, v ...interface{})
-		Debug(format string, v ...interface{})
+		Panic(v ...interface{})
+		Fatal(v ...interface{})
+		Error(v ...interface{})
+		Warning(v ...interface{})
+		Info(v ...interface{})
+		Debug(v ...interface{})
+
+		Panicf(format string, v ...interface{})
+		Fatalf(format string, v ...interface{})
+		Errorf(format string, v ...interface{})
+		Warningf(format string, v ...interface{})
+		Infof(format string, v ...interface{})
+		Debugf(format string, v ...interface{})
 
 		SetLevel(level int)
 		Level() int

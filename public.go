@@ -22,33 +22,57 @@ func RemoveLogger(name string) {
 }
 
 // Panic is equivalent to Print() followed by a call to panic().
-func Panic(format string, v ...interface{}) {
-	logger.Panic(format, v...)
+func Panic(v ...interface{}) {
+	logger.Panic(v...)
 }
 
 // Fatal is equivalent to Print() followed by a call to os.Exit(1).
-func Fatal(format string, v ...interface{}) {
-	logger.Fatal(format, v...)
+func Fatal(v ...interface{}) {
+	logger.Fatal(v...)
 }
 
 // Error is equivalent to Print() followed by error log level
-func Error(format string, v ...interface{}) {
-	logger.Error(format, v...)
+func Error(v ...interface{}) {
+	logger.Error(v...)
 }
 
 // Warning is equivalent to Print() followed by warning log level
-func Warning(format string, v ...interface{}) {
-	logger.Warning(format, v...)
+func Warning(v ...interface{}) {
+	logger.Warning(v...)
 }
 
 // Info is equivalent to Print() followed by info log level
-func Info(format string, v ...interface{}) {
-	logger.Info(format, v...)
+func Info(v ...interface{}) {
+	logger.Info(v...)
 }
 
 // Debug is equivalent to Print() followed by debug log level
-func Debug(format string, v ...interface{}) {
-	logger.Debug(format, v...)
+func Debug(v ...interface{}) {
+	logger.Debug(v...)
+}
+
+func Panicf(format string, v ...interface{}) {
+	logger.Panicf(format, v...)
+}
+
+func Fatalf(format string, v ...interface{}) {
+	logger.Fatalf(format, v...)
+}
+
+func Errorf(format string, v ...interface{}) {
+	logger.Errorf(format, v...)
+}
+
+func Warningf(format string, v ...interface{}) {
+	logger.Warningf(format, v...)
+}
+
+func Infof(format string, v ...interface{}) {
+	logger.Infof(format, v...)
+}
+
+func Debugf(format string, v ...interface{}) {
+	logger.Debugf(format, v...)
 }
 
 // SetLevel sets level of logger

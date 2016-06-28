@@ -26,30 +26,56 @@ func newChannel(name string, level int) Logger {
 	}
 }
 
-func (c *ch) Panic(format string, v ...interface{}) {
-	c.log(LevelPanic, format, v...)
-	panic(fmt.Sprintf(format, v...))
+func (c *ch) Panic(v ...interface{}) {
+	c.log(LevelPanic, v...)
+	panic(fmt.Sprint(v...))
 }
 
-func (c *ch) Fatal(format string, v ...interface{}) {
-	c.log(LevelFatal, format, v...)
+func (c *ch) Fatal(v ...interface{}) {
+	c.log(LevelFatal, v...)
 	os.Exit(1)
 }
 
-func (c *ch) Error(format string, v ...interface{}) {
-	c.log(LevelError, format, v...)
+func (c *ch) Error(v ...interface{}) {
+	c.log(LevelError, v...)
 }
 
-func (c *ch) Warning(format string, v ...interface{}) {
-	c.log(LevelWarning, format, v...)
+func (c *ch) Warning(v ...interface{}) {
+	c.log(LevelWarning, v...)
 }
 
-func (c *ch) Info(format string, v ...interface{}) {
-	c.log(LevelInfo, format, v...)
+func (c *ch) Info(v ...interface{}) {
+	c.log(LevelInfo, v...)
 }
 
-func (c *ch) Debug(format string, v ...interface{}) {
-	c.log(LevelDebug, format, v...)
+func (c *ch) Debug(v ...interface{}) {
+	c.log(LevelDebug, v...)
+}
+
+func (c *ch) Panicf(format string, v ...interface{}) {
+	c.logf(LevelPanic, format, v...)
+	panic(fmt.Sprintf(format, v...))
+}
+
+func (c *ch) Fatalf(format string, v ...interface{}) {
+	c.logf(LevelFatal, format, v...)
+	os.Exit(1)
+}
+
+func (c *ch) Errorf(format string, v ...interface{}) {
+	c.logf(LevelError, format, v...)
+}
+
+func (c *ch) Warningf(format string, v ...interface{}) {
+	c.logf(LevelWarning, format, v...)
+}
+
+func (c *ch) Infof(format string, v ...interface{}) {
+	c.logf(LevelInfo, format, v...)
+}
+
+func (c *ch) Debugf(format string, v ...interface{}) {
+	c.logf(LevelDebug, format, v...)
 }
 
 func (c *ch) SetLevel(level int) {
@@ -88,7 +114,16 @@ func (c *ch) Formatter() Formatter {
 	return c.formatter
 }
 
-func (c *ch) log(level int, format string, v ...interface{}) {
+func (c *ch) log(level int, v ...interface{}) {
+	if c.level < level {
+		return
+	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.formatter.Format(c.out, level, c.name, fmt.Sprint(v...))
+}
+
+func (c *ch) logf(level int, format string, v ...interface{}) {
 	if c.level < level {
 		return
 	}
