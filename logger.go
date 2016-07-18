@@ -31,6 +31,11 @@ type (
 		Formatter() Formatter
 	}
 
+	CustomLogger interface {
+		Logger
+		SetOutput(io.Writer)
+	}
+
 	Formatter interface {
 		Format(out io.Writer, level int, channel string, msg string)
 	}
@@ -43,6 +48,7 @@ var (
 	channels     = map[string]Logger{
 		defaultName: logger,
 	}
+	customChannels = map[string]CustomLogger{}
 
 	me sync.Mutex
 )

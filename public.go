@@ -1,5 +1,9 @@
 package log
 
+import (
+	"io"
+)
+
 // NewLogger creates new logger instance
 func NewLogger(name string) Logger {
 	me.Lock()
@@ -14,11 +18,35 @@ func NewLogger(name string) Logger {
 	return log
 }
 
+// NewCustomLogger creates new logger instance with custom out stream
+func NewCustomLogger(name string, out io.Writer) CustomLogger {
+	me.Lock()
+	defer me.Unlock()
+
+	log, ok := customChannels[name]
+
+	if !ok {
+		log = newCustomChannel(name, defaultLevel, out)
+		customChannels[name] = log
+	} else {
+		log.SetOutput(out)
+	}
+
+	return log
+}
+
 // RemoveLogger removes logger
 func RemoveLogger(name string) {
 	me.Lock()
 	defer me.Unlock()
 	delete(channels, name)
+}
+
+// RemoveLogger removes logger
+func RemoveCustomLogger(name string) {
+	me.Lock()
+	defer me.Unlock()
+	delete(customChannels, name)
 }
 
 // Panic is equivalent to Print() followed by a call to panic().
@@ -83,6 +111,10 @@ func SetLevel(level int) {
 	defaultLevel = level
 
 	for _, log := range channels {
+		log.SetLevel(level)
+	}
+
+	for _, log := range customChannels {
 		log.SetLevel(level)
 	}
 }

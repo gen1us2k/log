@@ -26,6 +26,21 @@ func newChannel(name string, level int) Logger {
 	}
 }
 
+func newCustomChannel(name string, level int, out io.Writer) CustomLogger {
+	return &ch{
+		name:      name,
+		level:     level,
+		out:       out,
+		formatter: newFormatter(),
+	}
+}
+
+func (c *ch) SetOutput(out io.Writer) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.out = out
+}
+
 func (c *ch) Panic(v ...interface{}) {
 	c.log(LevelPanic, v...)
 	panic(fmt.Sprint(v...))
@@ -120,7 +135,7 @@ func (c *ch) log(level int, v ...interface{}) {
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	c.formatter.Format(c.out, level, c.name, fmt.Sprint(v...))
+	c.formatter.Format(c.out, level, c.name, fmt.Sprintln(v...))
 }
 
 func (c *ch) logf(level int, format string, v ...interface{}) {

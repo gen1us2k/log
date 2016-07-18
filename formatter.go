@@ -2,6 +2,7 @@ package log
 
 import (
 	"io"
+	"strings"
 	"time"
 )
 
@@ -27,7 +28,7 @@ func (f *stdFormatter) Format(out io.Writer, level int, channel string, msg stri
 	f.formatHeader(&f.buf, now, level, channel)
 	f.buf = append(f.buf, msg...)
 
-	if len(msg) == 0 || msg[len(msg)-1] != '\n' {
+	if !strings.HasSuffix(msg, "\n") {
 		f.buf = append(f.buf, '\n')
 	}
 
